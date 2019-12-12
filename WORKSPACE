@@ -4,10 +4,10 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:git.bzl",
      "git_repository", "new_git_repository")
 
- # TODO(Jonathon): This pre-fetching of zlib, and reworking of com_google_protobuf
- # is a temporary hack (found in https://github.com/bazelbuild/rules_scala/issues/726)
- # that is used to avoid compiling Protobuf from source. Need this until our C++ toolchain is fixed because
- # right now we can't compile Protobuf on our Mac Pros.
+# TODO(Jonathon): This pre-fetching of zlib, and reworking of com_google_protobuf
+# is a temporary hack (found in https://github.com/bazelbuild/rules_scala/issues/726)
+# that is used to avoid compiling Protobuf from source. Need this until our C++ toolchain is fixed because
+# right now we can't compile Protobuf on our Mac Pros.
 
 PROTOBUF_JAVA_VERSION = "3.7.1"
 
@@ -55,7 +55,7 @@ genrule(
 git_repository(
     name = "io_bazel_rules_scala",
     remote = "https://github.com/bazelbuild/rules_scala",
-    commit = "dc5a793e8e643a6aa4889b14e08ce9554ac667ec" # HEAD as of 2019-05-13, update this as needed
+    commit = "0f89c210ade8f4320017daf718a61de3c1ac4773" # HEAD as of 2019-10-25, update this as needed
 )
 
 
