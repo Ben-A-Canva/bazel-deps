@@ -55,7 +55,7 @@ genrule(
 )
     """,
     sha256 = "22779eacfe0f33b9e8ceffa3cdef5935cae4e53f736e027d912b707522fea645",
-    url = "http://central.maven.org/maven2/com/google/protobuf/protobuf-java/%s/protobuf-java-%s.jar" % (PROTOBUF_JAVA_VERSION, PROTOBUF_JAVA_VERSION),
+    url = "http://repo1.maven.org/maven2/com/google/protobuf/protobuf-java/%s/protobuf-java-%s.jar" % (PROTOBUF_JAVA_VERSION, PROTOBUF_JAVA_VERSION),
 )
 
 
