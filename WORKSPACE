@@ -4,6 +4,13 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:git.bzl",
      "git_repository", "new_git_repository")
 
+http_archive(
+    name = "bazel_skylib",
+    sha256 = "7832382668c6dde9f57e18923763a24f9087cac66a50fbcc5afca848d03f2aa1",
+    strip_prefix = "bazel-skylib-b113ed5d05ccddee3093bb157b9b02ab963c1c32",
+    urls = ["https://github.com/bazelbuild/bazel-skylib/archive/b113ed5d05ccddee3093bb157b9b02ab963c1c32.tar.gz"],
+)
+
 # TODO(Jonathon): This pre-fetching of zlib, and reworking of com_google_protobuf
 # is a temporary hack (found in https://github.com/bazelbuild/rules_scala/issues/726)
 # that is used to avoid compiling Protobuf from source. Need this until our C++ toolchain is fixed because
