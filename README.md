@@ -3,6 +3,26 @@
 Generate [bazel](https://bazel.build/) dependencies transitively for maven artifacts, with scala
 support.
 
+## Quickstart
+
+This repo can be cloned and built locally, or you can download pre-build binaries for MacOS and Linux in the releases page. Automatic releases are generated for every commit against master.
+We also include a bash script in the releases which will let you easily download/run on mac/linux a default configuration for running bazel-deps.
+
+A flow like:
+1) Download the bash script paired with the release, it has the expected per platform sha256's embedded in it
+2) Place in your repo and `chmod +x update_dependencies.sh`, maybe in a scripts folder if you wish.
+3) Copy the `dependencies.yaml` from this repo, or write your own
+4) Run the script, it should produce some files in `3rdparty`
+5) Add to your workspace:
+```python
+load("//3rdparty:workspace.bzl", "maven_dependencies")
+maven_dependencies()
+load("//3rdparty:target_file.bzl", "build_external_workspace")
+build_external_workspace(name = "third_party")
+```
+6) You can now add dependencies to your `BUILD` files as described [below](#alternate-outputs-external-repo).
+eg `deps = ["@third_party//3rdparty/jvm/org/scalaj:scala_http"]`.
+
 ## Usage
 
 First, list all of your maven artifact dependencies in a [Dependencies](#dependencies) file.
@@ -202,7 +222,7 @@ java_plugin(
         "//external:jar/com/google/auto/value/auto_value",
     ],
 )
-``` 
+```
 If there is only a single `processorClasses` defined, the `java_plugin` rule is named `<java_library_name>_plugin`. If there are multiple
 `processorClasses` defined, each one is named `<java_library_name>_plugin_<processor_class_to_snake_case>`.
 
@@ -235,12 +255,12 @@ all of the supported options.
   output_base`).  Coursier ignores this option and uses `~/.cache/coursier`.
 * namePrefix: a string added to the generated workspace names, to avoid conflicts.  The external repository names and
   binding targets of each dependency are prefixed.
-* strictVisibility: this is enabled by default, when enabled a target must be explicitly declared in the 
-  `dependencies.yaml` file or it will not be visible to the rest of the workspace. If it is set to `false` all targets 
+* strictVisibility: this is enabled by default, when enabled a target must be explicitly declared in the
+  `dependencies.yaml` file or it will not be visible to the rest of the workspace. If it is set to `false` all targets
   will be generated with `public` visibility.
 * licenses: a set of strings added a licenses rule to each generated bazel target.  Required by
   bazel if your build targets are under `third_party/`. See the [licenses](https://docs.bazel.build/versions/master/be/functions.html#licenses) function in Bazel.
-* resolverType: `aether` or `coursier`. Note that `aether` is slower and seems to silently miss some dependencies for 
+* resolverType: `aether` or `coursier`. Note that `aether` is slower and seems to silently miss some dependencies for
   reasons we don't yet understand.
 * buildFileName: filename of the generated build files
 
