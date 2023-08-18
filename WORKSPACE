@@ -11,6 +11,46 @@ http_archive(
     urls = ["https://github.com/bazelbuild/bazel-skylib/archive/b113ed5d05ccddee3093bb157b9b02ab963c1c32.tar.gz"],
 )
 
+
+####################################################################################################
+# NixPkgs rules
+####################################################################################################
+
+rules_nixpkgs_version = "439cd5b6c79791105e9d475285293c6e207fc945"  # latest @ 28th November 2022
+
+http_archive(
+    name = "io_tweag_rules_nixpkgs",
+    sha256 = "04135470ac5a457720734081edf63ceeaf4f401eed9f61c0c21e437c148544fd",
+    strip_prefix = "rules_nixpkgs-{version}".format(version = rules_nixpkgs_version),
+    urls = ["https://github.com/tweag/rules_nixpkgs/archive/{version}.tar.gz".format(version = rules_nixpkgs_version)],
+)
+
+load("@io_tweag_rules_nixpkgs//nixpkgs:repositories.bzl", "rules_nixpkgs_dependencies")
+
+rules_nixpkgs_dependencies()
+
+load(
+    "@io_tweag_rules_nixpkgs//nixpkgs:nixpkgs.bzl",
+    "nixpkgs_cc_configure",
+        "nixpkgs_local_repository",
+
+)
+
+####################################################################################################
+# Third Party: Nix dependencies
+####################################################################################################
+nixpkgs_local_repository(
+    name = "nixpkgs",
+    nix_file = "//tools/build/nix:nixpkgs.nix",
+)
+
+# Configure a toolchain from the nixpkgs repository above. This means we will
+# use a fixed version of the C++ compiler, which helps with reproducible builds.
+nixpkgs_cc_configure(
+    name = "local_config_cc_nix",
+    repository = "@nixpkgs",
+)
+
 # TODO(Jonathon): This pre-fetching of zlib, and reworking of com_google_protobuf
 # is a temporary hack (found in https://github.com/bazelbuild/rules_scala/issues/726)
 # that is used to avoid compiling Protobuf from source. Need this until our C++ toolchain is fixed because
